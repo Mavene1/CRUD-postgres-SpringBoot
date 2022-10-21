@@ -5,6 +5,8 @@ import com.example.backdemo.end.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,16 +16,19 @@ import java.util.UUID;
 public class PersonController {
     @Autowired
     public PersonController(PersonService personService) {
+
         this.personService = personService;
     }
     private final PersonService personService;
 
     @PostMapping
-    public void addPerson(@RequestBody Person person){
+    public void addPerson(@Valid @NotNull @RequestBody Person person){
+
         personService.addPerson(person);
     }
     @GetMapping
     public List<Person> getAllPeople(){
+
         return personService.getAllPeople();
     }
     @GetMapping(path="{id}")
@@ -31,12 +36,12 @@ public class PersonController {
         return personService.getPersonById(id)
                 .orElse(null);
     }
-    @DeleteMapping(path={"id"})
+    @DeleteMapping(path="{id}")
     public void deletePersonById(@PathVariable("id") UUID id){
         personService.deletePersonById(id);
     }
-    @PutMapping(path={"id"})
-    public void updatePersonById(@PathVariable("id") UUID id, @RequestBody Person personToUpdate){
+    @PutMapping(path="{id}")
+    public void updatePersonById(@PathVariable("id") UUID id, @Valid @NotNull @RequestBody Person personToUpdate){
         personService.updatePersonById(id, personToUpdate);
     }
 }
